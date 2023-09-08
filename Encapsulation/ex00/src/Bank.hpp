@@ -1,3 +1,6 @@
+#ifndef BANK_HPP
+#define BANK_HPP
+
 #include <iostream>
 #include <vector>
 
@@ -16,5 +19,9 @@ public:
     bool closeAccount(int id);
     void lendMoney(int id, int loan);
 
+    void updateLiquidity(int delta);
+
     friend std::ostream &operator<<(std::ostream &p_os, const Bank &p_bank);
 };
+
+#endif

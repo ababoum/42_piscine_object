@@ -3,25 +3,18 @@
 
 int main()
 {
-	Account accountA = Account();
-	accountA.id = 0;
-	accountA.value = 100;
-
-	Account accountB = Account();
-	accountB.id = 1;
-	accountB.value = 100;
-
 	Bank bank = Bank();
-	bank.liquidity = 999;
-	bank.clientAccounts.push_back(&accountA);
-	bank.clientAccounts.push_back(&accountB);
 
-	bank.liquidity -= 200;
-	accountA.value += 400;
+	Account *accountA = bank.openAccount(100);
+	Account *accountB = bank.openAccount(100);
+	
+	bank.updateLiquidity(999);
+	bank.updateLiquidity(-200);
+
 
 	std::cout << "Account : " << std::endl;
-	std::cout << accountA << std::endl;
-	std::cout << accountB << std::endl;
+	std::cout << *accountA << std::endl;
+	std::cout << *accountB << std::endl;
 
 	std::cout << " ----- " << std::endl;
 

@@ -1,7 +1,6 @@
 #include <vector>
 #include "Bank.hpp"
 
-
 Bank::Bank()
 {
     liquidity = 0;
@@ -30,15 +29,17 @@ bool Bank::closeAccount(int id)
 {
     for (std::vector<Account *>::iterator it = clientAccounts.begin(); it != clientAccounts.end(); ++it)
     {
-        if (it->id == id)
+        Account *acc = *it;
+        if (acc->id == id)
         {
             Account *toDelete = *it;
 
             clientAccounts.erase(it);
             delete toDelete;
-            return ;
-        }
+            return true;
+        } 
     }
+    return false;
 }
 
 void Bank::lendMoney(int id, int loan)
@@ -55,23 +56,31 @@ void Bank::lendMoney(int id, int loan)
         return;
     }
 
-    for (int i = 0; i < clientAccounts.size(); ++i)
+    for (size_t i = 0; i < clientAccounts.size(); ++i)
     {
         if (clientAccounts[i]->id == id)
         {
             liquidity -= loan;
             clientAccounts[i]->value += loan;
-            return ;
+            return;
         }
     }
     std::cout << "ID does not match any account" << std::endl;
+}
+
+void Bank::updateLiquidity(int delta)
+{
+    liquidity += delta;
 }
 
 std::ostream &operator<<(std::ostream &p_os, const Bank &p_bank)
 {
     p_os << "Bank informations : " << std::endl;
     p_os << "Liquidity : " << p_bank.liquidity << std::endl;
-    for (auto &clientAccount : p_bank.clientAccounts)
+     for (std::vector<Account *>::const_iterator it = p_bank.clientAccounts.begin(); it != p_bank.clientAccounts.end(); ++it)
+     {
+        Account *clientAccount = *it;
         p_os << *clientAccount << std::endl;
+     }
     return (p_os);
 }
