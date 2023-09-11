@@ -37,9 +37,30 @@ bool Bank::closeAccount(int id)
             clientAccounts.erase(it);
             delete toDelete;
             return true;
-        } 
+        }
     }
     return false;
+}
+
+void Bank::creditAccount(int id, int deposit)
+{
+    if (deposit < 0)
+    {
+        std::cout << "A deposit cannot be negative" << std::endl;
+        return;
+    }
+    for (std::vector<Account *>::iterator it = clientAccounts.begin(); it != clientAccounts.end(); ++it)
+    {
+        Account *acc = *it;
+        if (acc->id == id)
+        {
+            int fees = deposit * 5 / 100;
+
+            liquidity += fees;
+            acc->value += deposit - fees;
+            return;
+        }
+    }
 }
 
 void Bank::lendMoney(int id, int loan)
@@ -77,10 +98,10 @@ std::ostream &operator<<(std::ostream &p_os, const Bank &p_bank)
 {
     p_os << "Bank informations : " << std::endl;
     p_os << "Liquidity : " << p_bank.liquidity << std::endl;
-     for (std::vector<Account *>::const_iterator it = p_bank.clientAccounts.begin(); it != p_bank.clientAccounts.end(); ++it)
-     {
+    for (std::vector<Account *>::const_iterator it = p_bank.clientAccounts.begin(); it != p_bank.clientAccounts.end(); ++it)
+    {
         Account *clientAccount = *it;
         p_os << *clientAccount << std::endl;
-     }
+    }
     return (p_os);
 }

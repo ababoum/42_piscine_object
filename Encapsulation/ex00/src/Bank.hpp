@@ -18,6 +18,7 @@ public:
     Account *openAccount(int deposit);
     bool closeAccount(int id);
     void lendMoney(int id, int loan);
+    void creditAccount(int id, int deposit);
 
     void updateLiquidity(int delta);
 
