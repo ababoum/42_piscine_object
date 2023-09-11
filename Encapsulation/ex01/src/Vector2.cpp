@@ -22,3 +22,9 @@ float Vector2::getY() const
 {
     return y;
 }
+
+std::ostream &operator<<(std::ostream &p_os, const Vector2 &vec)
+{
+    p_os << "(" << vec.getX() << ", " << vec.getY() << ")";
+    return (p_os);
+}

@@ -1,6 +1,8 @@
 #ifndef VECTOR2_HPP
 #define VECTOR2_HPP
 
+#include <iostream>
+
 struct Vector2
 {
 private:
@@ -15,6 +17,8 @@ public:
 
     float getX() const;
     float getY() const;
+
+    friend std::ostream &operator<<(std::ostream &p_os, const Vector2 &vec);
 };
 
 #endif

@@ -9,6 +9,10 @@
 #include <string>
 #include "Vector2.hpp"
 
+#define SSTR(x) static_cast<std::ostringstream &>(           \
+                    (std::ostringstream() << std::dec << x)) \
+                    .str()
+
 class Graph
 {
 public:
@@ -19,6 +23,8 @@ public:
     void addPoint(Vector2 point);
 
     void display();
+
+    friend std::ostream &operator<<(std::ostream &p_os, const Graph &graph);
 
 private:
     std::list<Vector2> points;
