@@ -51,28 +51,28 @@ void Graph::display()
 
         if (i == height - 1)
         {
-            lines.front().append(" ");
+            lines.back().append(" ");
             for (int j = 0; j < width - 1; ++j)
             {
                 std::ostringstream last_line;
-                lines.front().append(" ");
+                lines.back().append(" ");
                 std::string s = SSTR(x_min + j);
-                lines.front().append(s);
+                lines.back().append(s);
             }
-            lines.front().append("\n");
+            lines.back().append("\n");
             break;
         }
 
         std::ostringstream str;
         str << y_max - i;
 
-        lines.front().append(std::string(str.str()));
+        lines.back().append(std::string(str.str()));
 
         for (int j = 0; j < width - 1; ++j)
         {
-            lines.front().append(" .");
+            lines.back().append(" .");
         }
-        lines.front().append("\n");
+        lines.back().append("\n");
     }
 
     // Fill the map/lines
