@@ -1,17 +1,51 @@
 #include <vector>
 #include "Bank.hpp"
 
+int Account::id_index = 0;
+
+Account::Account()
+{
+    id = Account::id_index++;
+    value = 0;
+}
+
+int Account::getId() const
+{
+    return id;
+}
+
+int Account::getValue() const
+{
+    return value;
+}
+
+std::ostream &operator<<(std::ostream &p_os, const Account &p_account)
+{
+    p_os << "[" << p_account.id << "] - [" << p_account.value << "]";
+    return (p_os);
+}
+
 Bank::Bank()
 {
     liquidity = 0;
+}
+
+Bank::~Bank()
+{
+    for (std::vector<Account *>::iterator it = clientAccounts.begin(); it != clientAccounts.end(); ++it)
+    {
+        if (*it)
+        {
+            delete *it;
+        }
+    }
 }
 
 Account *Bank::openAccount(int deposit)
 {
     if (deposit < 0)
     {
-        std::cout << "An account cannot be opened with a negative deposit" << std::endl;
-        return 0;
+        throw std::runtime_error(std::string("An account cannot be opened with a negative deposit"));
     }
 
     Account *newAccount = new Account;
@@ -32,10 +66,8 @@ bool Bank::closeAccount(int id)
         Account *acc = *it;
         if (acc->id == id)
         {
-            Account *toDelete = *it;
-
-            clientAccounts.erase(it);
-            delete toDelete;
+            delete *it;
+            *it = 0;
             return true;
         }
     }
@@ -46,9 +78,9 @@ void Bank::creditAccount(int id, int deposit)
 {
     if (deposit < 0)
     {
-        std::cout << "A deposit cannot be negative" << std::endl;
-        return;
+        throw std::runtime_error(std::string("A deposit cannot be negative"));
     }
+
     for (std::vector<Account *>::iterator it = clientAccounts.begin(); it != clientAccounts.end(); ++it)
     {
         Account *acc = *it;
@@ -67,14 +99,12 @@ void Bank::lendMoney(int id, int loan)
 {
     if (loan <= 0)
     {
-        std::cout << "Loan cannot be negative or equal to zero" << std::endl;
-        return;
+        throw std::runtime_error(std::string("Loan cannot be negative or equal to zero"));
     }
 
     if (loan > liquidity)
     {
-        std::cout << "The bank has insufficient funds" << std::endl;
-        return;
+        throw std::runtime_error(std::string("The bank has insufficient funds"));
     }
 
     for (size_t i = 0; i < clientAccounts.size(); ++i)
@@ -92,6 +122,23 @@ void Bank::lendMoney(int id, int loan)
 void Bank::updateLiquidity(int delta)
 {
     liquidity += delta;
+}
+
+Account &Bank::operator[](int id)
+{
+    if (id < 0)
+    {
+        throw std::runtime_error(std::string("Account id cannot be negative"));
+    }
+
+    try
+    {
+        return *clientAccounts[id];
+    }
+    catch (const std::exception &e)
+    {
+        throw std::runtime_error(std::string("Account id does not exist"));
+    }
 }
 
 std::ostream &operator<<(std::ostream &p_os, const Bank &p_bank)
